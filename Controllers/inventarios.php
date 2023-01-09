@@ -42,11 +42,11 @@ class InventariosController
         $sucursales = $inventarios->getSucursalesConAlmacen();
         $sucursalesHerramienta = $inventarios->getAlmacenesHerramientas();
         foreach ($sucursales as $i => $sucursal) {
-            $sucursales[$i]->DESCRIPCION = utf8_decode( $sucursal->DESCRIPCION ); 
+            $sucursales[$i]->DESCRIPCION = mb_convert_encoding( $sucursal->DESCRIPCION , 'UTF.8'); 
         }
 
         foreach ($sucursalesHerramienta as $i => $sucursal) {
-            $sucursalesHerramienta[$i]->DESCRIPCION = utf8_decode( $sucursal->DESCRIPCION ); 
+            $sucursalesHerramienta[$i]->DESCRIPCION = mb_convert_encoding( $sucursal->DESCRIPCION , 'UTF.8'); 
         }
         $sucursales = array_merge( $sucursales , $sucursalesHerramienta);
         return $sucursales;
@@ -62,7 +62,7 @@ class InventariosController
         $inventarios = new Inventario;
         $subfamilias =  $inventarios->getSubfamilias( $tipoinventario, $sucursal, $familia );
         foreach ($subfamilias as $i => $subfamilia) {
-            $subfamilias[$i]->SUBFAMILIA = utf8_decode( $subfamilia->SUBFAMILIA );
+            $subfamilias[$i]->SUBFAMILIA = mb_convert_encoding( $subfamilia->SUBFAMILIA , 'UTF.8');
         }
         return $subfamilias;
     }
@@ -74,7 +74,7 @@ class InventariosController
         
         $item = $inventarios->getInfoArticulo( strtoupper( $codigo ), $sucursal );
         foreach ($item as $index => $articulo) {
-            $item[$index]->DESCRIPCION = utf8_decode( $articulo->DESCRIPCION );
+            $item[$index]->DESCRIPCION = mb_convert_encoding( $articulo->DESCRIPCION , 'UTF.8');
         }
 
         return $item;
@@ -89,6 +89,7 @@ class InventariosController
 
     public function esInventarioRepetido( $sucursal, $familia, $subfamilia, $tipo)
     {
+        // var_dump($sucursal, $familia, $subfamilia, "tipo ".$tipo);
         $inventarios = new Inventario;
         $inventarioRealizado = [];
         if ( $tipo == 5 ) { // es un inventario de herramientas
@@ -166,9 +167,9 @@ class InventariosController
         $arrayProductosMuestra = array();
 
         foreach ($productos as $idx => $producto) {
-            $productos[$idx]->DESCRIPCION = utf8_decode( $producto->DESCRIPCION);
-            $productos[$idx]->CODIGOARTICULO = utf8_decode( $producto->CODIGOARTICULO );
-            $productos[$idx]->SUBFAMILIA = utf8_decode( $producto->SUBFAMILIA );
+            $productos[$idx]->DESCRIPCION = mb_convert_encoding( $producto->DESCRIPCION, 'UTF.8');
+            $productos[$idx]->CODIGOARTICULO = mb_convert_encoding( $producto->CODIGOARTICULO , 'UTF.8');
+            $productos[$idx]->SUBFAMILIA = mb_convert_encoding( $producto->SUBFAMILIA , 'UTF.8');
         }
         
         $arrayProductosAgrupados =  array();
@@ -259,9 +260,9 @@ class InventariosController
         $idx = 0;
         $productos = [];
         foreach ($listadoGralArticulos as $i => $articulo) {
-                $listadoGralArticulos[$i]->DESCRIPCION = utf8_encode( $listadoGralArticulos[$i]->DESCRIPCION );
-                $listadoGralArticulos[$i]->CODIGOARTICULO = utf8_encode( $listadoGralArticulos[$i]->CODIGOARTICULO );
-                $listadoGralArticulos[$i]->SUBFAMILIA = utf8_encode( $listadoGralArticulos[$i]->SUBFAMILIA );
+                $listadoGralArticulos[$i]->DESCRIPCION = mb_convert_encoding( $listadoGralArticulos[$i]->DESCRIPCION , 'UTF-8');
+                $listadoGralArticulos[$i]->CODIGOARTICULO = mb_convert_encoding( $listadoGralArticulos[$i]->CODIGOARTICULO , 'UTF-8');
+                $listadoGralArticulos[$i]->SUBFAMILIA = mb_convert_encoding( $listadoGralArticulos[$i]->SUBFAMILIA , 'UTF-8');
 
                 if ( !isset( $productos[$listadoGralArticulos[$i]->FAMILIA."_ ".$listadoGralArticulos[$i]->SUBFAMILIA] ) ) {
                     $productos[$listadoGralArticulos[$i]->FAMILIA."_ ".$listadoGralArticulos[$i]->SUBFAMILIA] = [ $listadoGralArticulos[$i ] ];
@@ -342,22 +343,22 @@ class InventariosController
 
     public function generaInventarioGeneral( $sucursal, $familia, $subfamilia)
     {
+        //se genera el inventario de todos familias y subfamilias
         $inventarios = new Inventario;
         $productos = $inventarios->getStockGeneral( $sucursal, $familia, $subfamilia);
-        $inventarioRegistrado = $this->esInventarioRepetido($sucursal, $familia, $subfamilia ,1);
-        if ( isset($inventarioRegistrado['error']) ) {
-            
-            return $inventarioRegistrado;
-        } elseif( isset($inventarioRegistrado[0]) ) {
-            return $inventarioRegistrado;
-        }
+        // $inventarioRegistrado = $this->esInventarioRepetido($sucursal, $familia, $subfamilia ,1);
+        // if ( isset($inventarioRegistrado['error']) ) {            
+        //     return $inventarioRegistrado;
+        // } elseif( isset($inventarioRegistrado[0]) ) {
+
+        //     return $inventarioRegistrado;
+        // }
         
         foreach ($productos as $i => $item) {
-            $productos[$i]->DESCRIPCION = utf8_decode( $item->DESCRIPCION);
-            $productos[$i]->CODIGOARTICULO = utf8_decode( $item->CODIGOARTICULO );
-            $productos[$i]->SUBFAMILIA = utf8_decode( $item->SUBFAMILIA );
-        }         
-        
+            $productos[$i]->DESCRIPCION = mb_convert_encoding($item->DESCRIPCION, 'UTF-8');
+            $productos[$i]->CODIGOARTICULO = mb_convert_encoding( $item->CODIGOARTICULO, 'UTF-8');
+            $productos[$i]->SUBFAMILIA = mb_convert_encoding( $item->SUBFAMILIA, 'UTF-8');
+        }
         return $productos;
     }
 
@@ -375,9 +376,9 @@ class InventariosController
         }
         
         foreach ($productos as $i => $item) {
-            $productos[$i]->DESCRIPCION = utf8_decode( $item->DESCRIPCION);
-            $productos[$i]->CODIGOARTICULO = utf8_decode( $item->CODIGOARTICULO );
-            $productos[$i]->SUBFAMILIA = utf8_decode( $item->SUBFAMILIA );
+            $productos[$i]->DESCRIPCION = mb_convert_encoding($item->DESCRIPCION, 'UTF-8');
+            $productos[$i]->CODIGOARTICULO = mb_convert_encoding( $item->CODIGOARTICULO, 'UTF-8');
+            $productos[$i]->SUBFAMILIA = mb_convert_encoding( $item->SUBFAMILIA, 'UTF-8');
         }         
         
         return $productos;

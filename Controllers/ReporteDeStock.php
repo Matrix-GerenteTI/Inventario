@@ -39,7 +39,7 @@ class ReporteStock extends PrepareExcel
                     $this->libro->getActiveSheet()->setCellValue("A$i", $producto->CODIGOARTICULO);
                     $this->libro->getActiveSheet()->setCellValue("B$i", $producto->FAMILIA);
                     $this->libro->getActiveSheet()->setCellValue("C$i", $producto->SUBFAMILIA);
-                    $this->libro->getActiveSheet()->setCellValue("D$i", utf8_encode( $producto->DESCRIPCION) );
+                    $this->libro->getActiveSheet()->setCellValue("D$i", mb_convert_encoding( $producto->DESCRIPCION, 'UTF-8') );
                     $this->libro->getActiveSheet()->setCellValue("E$i", $producto->STOCK);
                     $this->libro->getActiveSheet()->setCellValue("F$i", "=E$i-1");                       
                     $i++;             

@@ -255,20 +255,20 @@ class Inventario
             $subfamilia = '';
         if($familia==-1)
             $familia = '';
+                    // WHERE 	CFGA.itemservicio='' AND RAXA.FK1MCFG_ALMACENES = $sucursal AND CFGA.FAMILIA LIKE '%$familia%' AND CFGA.SUBFAMILIA LIKE '%$subfamilia%'
         $queryStockGeneral = "SELECT 	CFGA.CODIGOARTICULO,CFGA.DESCRIPCION,CFGA.SUBFAMILIA,CFGA.FAMILIA,
                             (RAXA.existotal-RAXA.exispedidos-RAXA.exisproceso) as STOCK,
 							CFGA.ID as ID
                     FROM 	   (cfg_articulos CFGA 
                             inner join ref_artxalmacen RAXA on CFGA.id=RAXA.fk1mcfg_articulos 
                             inner join cfg_almacenes A2 on A2.id=RAXA.fk1mcfg_almacenes ) 
-                    WHERE 	CFGA.itemservicio='' AND RAXA.FK1MCFG_ALMACENES = $sucursal AND CFGA.FAMILIA LIKE '%$familia%' AND CFGA.SUBFAMILIA LIKE '%$subfamilia%' 
+                            WHERE 	CFGA.itemservicio='' AND RAXA.FK1MCFG_ALMACENES = $sucursal 
                     AND 		(RAXA.existotal-RAXA.exispedidos-RAXA.exisproceso)>0 
                     GROUP BY CFGA.FAMILIA,CFGA.SUBFAMILIA,CFGA.DESCRIPCION,CFGA.CODIGOARTICULO,STOCK,CFGA.ID
                     ORDER 	by CFGA.FAMILIA,CFGA.SUBFAMILIA,CFGA.DESCRIPCION,CFGA.CODIGOARTICULO";
         
         //echo $queryStockGeneral;
         $exeStockGeneralFamilia = ibase_query( $this->conexionIbase, $queryStockGeneral);
-
         return $this->fetchResults( $exeStockGeneralFamilia);
     }
 

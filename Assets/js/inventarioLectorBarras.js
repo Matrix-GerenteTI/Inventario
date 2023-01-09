@@ -277,16 +277,17 @@ let root = new Vue({
                     sucursal: this.sucursal
                 }
             }).then((result) => {
-                console.log(result);
+                console.log(result)
                 let response =result.data;
                 if( response.error == undefined){
-                    if (response.length > 0) {    
+                    if (response.length > 0) {
                         Array.prototype.forEach.call(  result.data, function (item , i) { 
                             item.CANTIDAD = 0;
                             item.DIFERENCIA = item.CANTIDAD - item.STOCK
                             _this.listaItems.push( item );
                          } );
-                        this.listaItems = result.data;
+                         this.listaItems = result.data;
+                         console.log("saliendo del foreach", this.listaItems)
                         localStorage.setItem("progresoInventario", JSON.stringify({ sucursal: this.sucursal, items: this.listaItems, familia: this.fam, subfamilia: this.subfam}) );
  
                     } else {
@@ -295,8 +296,9 @@ let root = new Vue({
                         
                     }
                 }
-            }).catch((err) => {
-                
+            })
+            .catch((err) => {
+                console.log(err)
             });
         },
     },

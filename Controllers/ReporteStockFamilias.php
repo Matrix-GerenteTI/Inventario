@@ -72,7 +72,7 @@ class ReporteStockFamilia extends PrepareExcel
                 foreach ($almacenes['ALMACENES'] as $almacen => $contenidoAlmacen) {
                     if ( $almacen != "APARTADOS_MATRIZ" && $almacen!= "PRESTAMOS CENTRO" ) {
 
-                        $this->libro->getActiveSheet()->setCellValue("B$i",utf8_encode( $contenidoAlmacen['DESCRIPCION'] ));
+                        $this->libro->getActiveSheet()->setCellValue("B$i",mb_convert_encoding( $contenidoAlmacen['DESCRIPCION'], 'UTF-8' ));
                         $this->libro->getActiveSheet()->setCellValue($arrayColumnaAlmacen[$almacen].$i,$contenidoAlmacen['STOCK'] );
                         $this->libro->getActiveSheet()->getStyle($arrayColumnaAlmacen[$almacen].$i)->applyFromArray($this->centrarTexto);
                     }
